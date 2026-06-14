@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CN+ — Sistem Garansi Proteksi HP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <div class="logo">
+    <div class="logo-badge">CN+</div>
+    Sistem Garansi Proteksi HP
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('daftar-hp')">📱 Daftar HP</button>
+    <button class="nav-tab" onclick="showView('form-klaim')">📝 Input Klaim</button>
+    <button class="nav-tab" onclick="showView('riwayat')">📋 Riwayat Klaim</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- VIEW 1: DAFTAR HP -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="daftar-hp" class="view active">
+  <div class="page-header" style="margin: 0 -32px 24px; padding: 16px 32px;">
+    <div>
+      <h1>Daftar Perangkat</h1>
+      <p>Pilih HP untuk memulai input klaim garansi pelanggan</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="searchHP" placeholder="Cari merek atau tipe HP..." oninput="filterHP()" />
+    <select onchange="filterHP()" id="filterBrand">
+      <option value="">Semua Merek</option>
+      <option>Samsung</option>
+      <option>iPhone</option>
+      <option>Xiaomi</option>
+      <option>OPPO</option>
+      <option>Vivo</option>
+      <option>Realme</option>
+    </select>
+    <select onchange="filterHP()" id="filterType">
+      <option value="">Semua Kelas</option>
+      <option>Flagship</option>
+      <option>Mid Range</option>
+      <option>Entry</option>
+    </select>
+  </div>
+
+  <div class="hp-grid" id="hpGrid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- VIEW 2: FORM INPUT KLAIM -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="form-klaim" class="view">
+  <div class="page-header" style="margin: 0 -32px 24px; padding: 16px 32px;">
+    <div>
+      <h1>Input Klaim Garansi</h1>
+      <p>Lengkapi data pelanggan dan perangkat untuk mendaftarkan proteksi</p>
+    </div>
+    <button class="back-btn" onclick="showView('daftar-hp')">← Kembali ke Daftar HP</button>
+  </div>
+
+  <div class="form-layout">
+
+    <!-- Kolom Kiri: Form -->
+    <div>
+
+      <!-- Seksi 1: Data Pelanggan -->
+      <div class="form-section">
+        <div class="form-section-title"><span>1</span> Data Pelanggan</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Nama Lengkap <span class="req">*</span></label>
+            <input type="text" id="f_nama" placeholder="Nama lengkap pelanggan" oninput="updateSummary()" />
+          </div>
+          <div class="field">
+            <label>Nomor HP Pelanggan <span class="req">*</span></label>
+            <input type="text" id="f_nohp" placeholder="08xx-xxxx-xxxx" oninput="updateSummary()" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Email Pelanggan <span class="req">*</span></label>
+            <input type="email" id="f_email" placeholder="email@domain.com" oninput="updateSummary()" />
+          </div>
+          <div class="field">
+            <label>Tanggal Pembelian <span class="req">*</span></label>
+            <input type="date" id="f_tglbeli" oninput="updateSummary()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Seksi 2: Data Perangkat -->
+      <div class="form-section">
+        <div class="form-section-title"><span>2</span> Data Perangkat</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Merek HP</label>
+            <input type="text" id="f_merk" readonly />
+          </div>
+          <div class="field">
+            <label>Tipe / Model HP</label>
+            <input type="text" id="f_tipe" readonly />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>IMEI / Serial Number <span class="req">*</span></label>
+            <input type="text" id="f_imei" placeholder="Contoh: 356938035643809" oninput="updateSummary()" />
+          </div>
+          <div class="field">
+            <label>Harga HP</label>
+            <input type="text" id="f_harga" readonly />
+          </div>
+        </div>
+      </div>
+
+      <!-- Seksi 3: Tier Proteksi -->
+      <div class="form-section">
+        <div class="form-section-title"><span>3</span> Tier Proteksi</div>
+        <div class="tier-row">
+          <div class="tier-opt" id="tierSilver" onclick="pilihTier('silver')">
+            <div class="tier-check"></div>
+            <div class="tier-name">Silver</div>
+            <div class="tier-dur">Proteksi 12 Bulan</div>
+            <div class="tier-price">Rp 120.000</div>
+          </div>
+          <div class="tier-opt" id="tierGold" onclick="pilihTier('gold')">
+            <div class="tier-check"></div>
+            <div class="tier-name">Gold</div>
+            <div class="tier-dur">Proteksi 12 Bulan</div>
+            <div class="tier-price">Rp 199.000</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:10px 12px;background:var(--red-light);border-radius:var(--radius);font-size:.78rem;color:#6B2030;line-height:1.7;">
+          <strong>Silver:</strong> Proteksi layar retak &amp; baterai menurun<br>
+          <strong>Gold:</strong> Semua Silver + kerusakan hardware &amp; software penuh
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Kolom Kanan: Ringkasan -->
+    <div>
+      <div class="summary-panel">
+        <div class="summary-head">Ringkasan Klaim</div>
+        <div class="summary-body">
+          <div class="sum-row"><span class="sum-key">Pelanggan</span><span class="sum-val" id="s_nama">—</span></div>
+          <div class="sum-row"><span class="sum-key">No. HP</span><span class="sum-val" id="s_nohp">—</span></div>
+          <div class="sum-row"><span class="sum-key">Email</span><span class="sum-val" id="s_email" style="word-break:break-all">—</span></div>
+          <div class="sum-row"><span class="sum-key">Tgl. Beli</span><span class="sum-val" id="s_tgl">—</span></div>
+          <div class="sum-row"><span class="sum-key">Perangkat</span><span class="sum-val" id="s_perangkat">—</span></div>
+          <div class="sum-row"><span class="sum-key">Harga HP</span><span class="sum-val" id="s_harga">—</span></div>
+          <div class="sum-row"><span class="sum-key">IMEI / SN</span><span class="sum-val" id="s_imei" style="font-size:.75rem;font-family:monospace">—</span></div>
+          <div class="sum-row"><span class="sum-key">Tier Proteksi</span><span class="sum-val" id="s_tier">—</span></div>
+          <div class="sum-total">
+            <span class="key">Biaya Proteksi</span>
+            <span class="val" id="s_total">—</span>
+          </div>
+          <button class="btn-submit" onclick="simpanKlaim()">Simpan &amp; Aktifkan Proteksi</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- VIEW 3: RIWAYAT KLAIM -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="riwayat" class="view">
+  <div class="page-header" style="margin: 0 -32px 24px; padding: 16px 32px;">
+    <div>
+      <h1>Riwayat Klaim Garansi</h1>
+      <p>Seluruh data proteksi yang telah didaftarkan</p>
+    </div>
+  </div>
+
+  <!-- Statistik -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
+      </div>
+      <div><div class="stat-val" id="stat-total">0</div><div class="stat-label">Total Klaim</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div><div class="stat-val" id="stat-silver">0</div><div class="stat-label">Tier Silver</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div><div class="stat-val" id="stat-gold">0</div><div class="stat-label">Tier Gold</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div><div class="stat-val" id="stat-omset">0</div><div class="stat-label">Total Omset</div></div>
+    </div>
+  </div>
+
+  <!-- Filter & Cari -->
+  <div class="table-toolbar">
+    <input type="text" id="searchKlaim" placeholder="Cari nama, IMEI, atau no. klaim..." oninput="renderTable()" />
+    <select id="filterTier" onchange="renderTable()" style="border:1px solid var(--border-md);border-radius:var(--radius);padding:8px 12px;font-family:inherit;font-size:.85rem;background:var(--white);">
+      <option value="">Semua Tier</option>
+      <option value="silver">Silver</option>
+      <option value="gold">Gold</option>
+    </select>
+  </div>
+
+  <!-- Tabel -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>No. Klaim</th>
+          <th>Tgl. Daftar</th>
+          <th>Nama Pelanggan</th>
+          <th>No. HP</th>
+          <th>Perangkat</th>
+          <th>IMEI / SN</th>
+          <th>Harga HP</th>
+          <th>Tgl. Beli</th>
+          <th>Tier</th>
+          <th>Biaya</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── MODAL SUKSES ── -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-icon">✅</div>
+    <h2>Klaim Berhasil Disimpan</h2>
+    <p>Proteksi perangkat pelanggan telah diaktifkan. Catat nomor klaim berikut sebagai referensi.</p>
+    <div class="modal-klaim">
+      <div class="label">Nomor Klaim</div>
+      <div class="no" id="modalNoKlaim">CN-XXXXXXXX</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-m-secondary" onclick="tutupModal()">Input Baru</button>
+      <button class="btn-m-primary" onclick="keRiwayat()">Lihat Riwayat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SCRIPTS ── -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
